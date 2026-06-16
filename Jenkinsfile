@@ -19,23 +19,15 @@ pipeline {
         }
 
         stage('Production') {
-
             when {
                 branch 'master'
             }
 
             steps {
-
                 sh '''
                 ssh -o StrictHostKeyChecking=no ubuntu@65.1.147.87 "
-
                 docker rm -f prod-container || true
-
-                docker run -d \
-                --name prod-container \
-                -p 80:80 \
-                abode-webapp
-
+                docker run -d --name prod-container -p 80:80 abode-webapp
                 "
                 '''
             }
