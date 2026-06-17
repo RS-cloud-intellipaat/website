@@ -1,4 +1,3 @@
-```groovy
 pipeline {
     agent any
 
@@ -6,7 +5,9 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'docker build -t abode-webapp .'
+                sh '''
+                docker build -t abode-webapp .
+                '''
             }
         }
 
@@ -14,7 +15,11 @@ pipeline {
             steps {
                 sh '''
                 docker rm -f test-container || true
-                docker run -d --name test-container -p 8082:80 abode-webapp
+
+                docker run -d \
+                --name test-container \
+                -p 8082:80 \
+                abode-webapp
                 '''
             }
         }
@@ -25,6 +30,7 @@ pipeline {
                 ssh -o StrictHostKeyChecking=no ubuntu@65.1.147.87 "
 
                 rm -rf website || true
+
                 git clone https://github.com/RS-cloud-intellipaat/website.git
 
                 cd website
@@ -33,11 +39,24 @@ pipeline {
 
                 docker rm -f prod-container || true
 
-                docker run -d --name prod-container -p 80:80 abode-webapp
+                docker run -d \
+                --name prod-container \
+                -p 80:80 \
+                abode-webapp
 
                 "
                 '''
             }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline executed successfully'
+        }
+
+        failure {
+            echo 'Pipeline execution failed'
         }
     }
 }
