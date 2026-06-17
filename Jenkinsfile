@@ -19,10 +19,7 @@ pipeline {
         }
 
         stage('Production') {
-            when {
-                branch 'master'
-            }
-
+       
             steps {
                 sh '''
                 ssh -o StrictHostKeyChecking=no ubuntu@65.1.147.87 "
