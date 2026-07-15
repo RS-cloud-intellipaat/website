@@ -5,26 +5,26 @@ pipeline {
 
         stage('Build') {
             steps {
-                echo 'Building Application...'
+                echo 'Building Website...'
             }
         }
 
         stage('Test') {
             steps {
-                echo 'Testing Application...'
+                echo 'Testing Website...'
             }
         }
 
-        stage('Deploy to Production') {
+        stage('Deploy') {
             when {
                 branch 'master'
             }
             steps {
-                sshagent(credentials: ['production-ssh']) {
+                sshagent(['production-ssh']) {
                     sh '''
-                    ssh -o StrictHostKeyChecking=no ubuntu@13.206.107.104 << EOF
+                    ssh -o StrictHostKeyChecking=no ubuntu@13.206.107.104 "
                     sudo cp -r * /var/www/html/
-                    EOF
+                    "
                     '''
                 }
             }
